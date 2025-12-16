@@ -1,201 +1,127 @@
-# LogMaster - Smart Log File Analyzer
+# ClipStack - Clipboard History Manager
 
-Stop grep-ing through logs! LogMaster analyzes, filters, and visualizes logs in seconds.
+Never lose what you copied! ClipStack remembers everything you copy so you can find it later.
 
-## Why LogMaster?
+## Why ClipStack?
 
-**The Problem:** Finding issues in logs is painful
-- `grep` through GBs of logs
-- Miss important errors
-- No statistics
-- Hard to spot patterns
-- Difficult to share findings
+**The Problem:** System clipboard only remembers ONE thing
+- Copy something new = lose the old
+- No search, no history
+- Accidentally overwrite important data
+- Can't go back to something you copied hours ago
 
-**The Solution:** Smart log analysis
-- Instant error detection
-- Statistics at a glance
-- Smart filtering
-- Generate reports
-- Follow logs with filters
+**The Solution:** ClipStack remembers everything
+- Unlimited clipboard history
+- Search through past copies
+- Pin important items
+- Auto-categorizes content
+- Persists across reboots
 
 ## Installation
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/strabo231/logmaster/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/strabo231/clipstack/main/install.sh | bash
+```
+
+**Requirements:**
+- `xclip` (Linux) or `pbcopy/pbpaste` (macOS)
+
+```bash
+# Ubuntu/Debian
+sudo apt install xclip
+
+# macOS (built-in)
+# No installation needed
 ```
 
 ## Quick Start
 
 ```bash
-# Analyze log file
-logmaster analyze app.log
+# Start monitoring (run once)
+clipstack watch &
 
-# Show only errors
-logmaster errors app.log
+# View history
+clipstack
 
-# Follow log with filter
-logmaster tail app.log -f --filter "ERROR"
+# Search for something
+clipstack search "password"
 
-# Generate statistics
-logmaster stats access.log
+# Copy item #5 back to clipboard
+clipstack copy 5
 
-# Search for pattern
-logmaster search app.log "database"
+# Pin important items
+clipstack pin 3
 ```
 
 ## Commands
 
 ```
-analyze <file>     Full analysis
-errors <file>      Show only errors
-warnings <file>    Show only warnings
-tail <file>        Smart tail with filters
-stats <file>       Generate statistics
-search <file>      Search for pattern
-report <file>      Generate HTML report
+clipstack              Show clipboard history
+clipstack search <q>   Search history  
+clipstack copy <n>     Copy item to clipboard
+clipstack pin <n>      Pin item permanently
+clipstack pinned       Show pinned items
+clipstack delete <n>   Delete item
+clipstack clear        Clear all history
+clipstack stats        Usage statistics
+clipstack watch        Monitor clipboard (daemon)
 ```
 
 ## Features
 
-📊 **Smart analysis** - Errors, warnings, patterns  
-🔍 **Advanced filtering** - By level, time, pattern  
-📈 **Statistics** - Error rates, top errors, timelines  
-🎯 **Multi-format** - Apache, Nginx, JSON, syslog, app logs  
-⚡ **Fast** - Handle GB-sized logs  
-📝 **Reports** - Generate HTML summaries  
-🔴 **Live monitoring** - Tail with smart filters  
+📋 **Unlimited history** - Never lose a copy again  
+🔍 **Full-text search** - Find anything instantly  
+📌 **Pin favorites** - Keep important items forever  
+🏷️ **Auto-categorize** - URLs, code, text, emails, etc.  
+💾 **Persistent** - Survives reboots  
+⚡ **Fast** - Instant search and retrieval  
+📊 **Statistics** - See what you copy most  
+🎨 **Beautiful output** - Color-coded types  
 
-## Usage
+## Usage Examples
 
-**Analyze log:**
+**Start monitoring:**
 ```bash
-logmaster analyze app.log
-```
-```
-═══════════════════════════════════════════════════════════════
-                  LOG FILE ANALYSIS
-═══════════════════════════════════════════════════════════════
-
-File: app.log
-Size: 45MB
-Lines: 156,234
-Format: app
-
-Log Levels:
-  ERROR:   234
-  WARNING: 1,456
-  INFO:    154,544
-
-Top Errors:
-  89 × Database connection timeout
-  42 × API rate limit exceeded
-  38 × Invalid JWT token
+clipstack watch &
 ```
 
-**Show errors:**
+This runs in background and captures everything you copy.
+
+**View history:**
 ```bash
-logmaster errors app.log --last 1h
+clipstack
 ```
 
-**Tail with filter:**
+**Search history:**
 ```bash
-logmaster tail app.log -f --filter "ERROR"
+clipstack search "api"
 ```
-Real-time error monitoring!
 
-**Statistics:**
+**Copy old item:**
 ```bash
-logmaster stats access.log
-```
-```
-Overview:
-  Total lines:  1,234,567
-  Errors:       234 (0.02%)
-  Warnings:     1,456 (0.12%)
-
-Top 5 IPs:
-  12,345 192.168.1.100
-   8,901 192.168.1.101
-   5,678 192.168.1.102
-
-Status Codes:
-  1,123,456 200
-     98,765 404
-     12,346 500
+clipstack copy 5
+✓ Copied item 5 to clipboard
 ```
 
-**Search:**
+Now you can paste it anywhere!
+
+**Pin important items:**
 ```bash
-logmaster search app.log "timeout"
-```
-
-**Generate report:**
-```bash
-logmaster report app.log --output report.html
-```
-
-## Supported Formats
-
-**Application logs:**
-```
-[2024-12-15 10:23:45] ERROR: Database connection failed
-[2024-12-15 10:23:46] WARN: Slow query detected
-```
-
-**Access logs (Apache/Nginx):**
-```
-192.168.1.1 - - [15/Dec/2024:10:23:45] "GET /api HTTP/1.1" 200
-```
-
-**JSON logs:**
-```json
-{"timestamp":"2024-12-15T10:23:45Z","level":"ERROR","msg":"Failed"}
-```
-
-**Syslog:**
-```
-Dec 15 10:23:45 server app[1234]: Error message
+clipstack pin 3
+✓ Pinned item 3
 ```
 
 ## Use Cases
 
-**Debugging:**
-```bash
-# Find all errors in last hour
-logmaster errors app.log --last 1h
-
-# Search for specific issue
-logmaster search app.log "OutOfMemoryError"
-```
-
-**Monitoring:**
-```bash
-# Watch for errors in real-time
-logmaster tail app.log -f --filter "ERROR"
-```
-
-**Analysis:**
-```bash
-# Get statistics
-logmaster stats app.log
-
-# Generate report for team
-logmaster report app.log
-```
-
-**Production Troubleshooting:**
-```bash
-# Quick overview
-logmaster analyze production.log
-
-# Top errors
-logmaster errors production.log | head -20
-```
+- **Recover Lost Copy** - Accidentally copied over something important
+- **Code Snippets** - Keep useful snippets accessible
+- **Research & Writing** - Track sources you've copied
+- **Multi-step workflows** - Copy multiple things, paste later
 
 ## Requirements
 
 - Bash 4.0+
-- Standard Unix tools (grep, awk, sort)
+- `xclip` (Linux) or `pbcopy/pbpaste` (macOS)
 
 ## License
 
@@ -207,4 +133,4 @@ Sean - [@strabo231](https://github.com/strabo231)
 
 ---
 
-**Analyze logs. Find bugs. Ship faster.** 📊
+**Never lose what you copied. Ever.** 📋
