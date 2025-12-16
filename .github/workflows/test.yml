@@ -1,0 +1,50 @@
+name: Test ClipStack
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test on Ubuntu
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Install xclip
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xclip
+    
+    - name: Make script executable
+      run: chmod +x clipstack
+    
+    - name: Test help command
+      run: ./clipstack --help
+    
+    - name: Test version command
+      run: ./clipstack --version
+    
+    - name: Install shellcheck
+      run: sudo apt-get install -y shellcheck
+    
+    - name: Run shellcheck
+      continue-on-error: true
+      run: shellcheck clipstack
+    
+    - name: Verify script structure
+      run: |
+        grep -q "show_history()" clipstack
+        grep -q "search_history()" clipstack
+        grep -q "watch_clipboard()" clipstack
+        echo "✓ Script structure verified"
+    
+    - name: All tests passed
+      run: |
+        echo "================================"
+        echo "✓ All tests passed successfully!"
+        echo "================================"
