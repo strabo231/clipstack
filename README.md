@@ -1,3 +1,5 @@
+[![Test ClipStack](https://github.com/strabo231/clipstack/actions/workflows/test.yml/badge.svg)](https://github.com/strabo231/clipstack/actions/workflows/test.yml)
+
 # ClipStack - Clipboard History Manager
 
 Never lose what you copied! ClipStack remembers everything you copy so you can find it later.
